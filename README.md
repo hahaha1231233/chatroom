@@ -1,164 +1,129 @@
-# Online Chatroom V2
+# Online Chatroom
 
-一个基于 Java Web 技术的在线聊天室系统，支持公共聊天、私密聊天、用户在线状态管理等功能。
+一个基于 Java Web 技术的简单在线聊天室系统，使用 Servlet、JSP 和 Java 实现。
 
-## 📋 项目概述
+## 📋 项目简介
 
-这是一个改进版的在线聊天室应用，使用 Java Servlet、JSP、JSTL 等技术实现。系统提供了完整的用户认证、实时消息传递、私聊会话管理等功能。
+这是一个基础的在线聊天室应用，支持多用户实时聊天、在线用户列表显示、消息历史记录等功能。项目采用传统的 Java Web 技术栈，适合学习和教学使用。
 
 ## 🏗️ 项目架构
 
 ### 技术栈
-- **后端**: Java Servlet 4.0+, JSP, JSTL
-- **前端**: HTML5, CSS3, JavaScript
-- **服务器**: Tomcat 10+
+- **后端**: Java Servlet 4.0, JSP
+- **前端**: HTML, CSS, JavaScript
+- **服务器**: Apache Tomcat 11.0.11
+- **Java版本**: JDK 17+
 - **数据存储**: ServletContext 应用级存储
-- **模板引擎**: JSP + JSTL 标签库
+
+### 系统架构
+```
+MVC 架构模式:
+- 模型(Model): Message.java - 数据实体
+- 视图(View): JSP页面 (index.jsp, chat.jsp) - 用户界面
+- 控制器(Controller): Servlet类 - 业务逻辑处理
+```
 
 ### 目录结构
 ```
-chatroom_improved_version/
-├── src/main/java/com/chatroom_improved_version/
-│   ├── model/              # 数据模型
-│   │   ├── Message.java    # 消息实体类
-│   │   └── PrivateMessage.java # 私聊消息实体类
-│   ├── servlet/           # Servlet控制器
-│   │   ├── LoginServlet.java      # 登录处理
-│   │   ├── LogoutServlet.java     # 登出处理
-│   │   ├── ChatRoomServlet.java   # 公共聊天室
-│   │   └── PrivateChatServlet.java # 私聊处理
+online-chatroom/
+├── src/main/java/com/chatroom/
+│   ├── model/
+│   │   └── Message.java              # 消息实体类
+│   ├── servlet/
+│   │   ├── LoginServlet.java         # 用户登录控制器
+│   │   ├── LogoutServlet.java        # 用户退出控制器
+│   │   └── ChatRoomServlet.java      # 聊天室主控制器
 ├── webapp/
 │   ├── WEB-INF/
-│   │   └── web.xml        # 配置文件
-│   ├── index.jsp          # 登录页面
-│   ├── chat.jsp           # 主聊天室页面
-│   └── private-chat.jsp   # 私聊页面
-└── README.md
+│   │   └── web.xml                   # Web应用配置文件
+│   ├── index.jsp                     # 登录页面
+│   └── chat.jsp                      # 主聊天室页面
+└── pom.xml                           # Maven配置文件(可选)
 ```
 
-## ✨ 核心功能
+## ✨ 功能特性
 
 ### 1. 用户管理
-- **用户登录**: 昵称验证，防止重复登录
+- **用户登录**: 输入昵称即可进入聊天室
 - **在线状态**: 实时显示在线用户列表
-- **自动登出**: 30分钟会话超时
-- **退出通知**: 用户离开时广播系统消息
+- **会话管理**: 30分钟会话超时
+- **用户退出**: 清理在线状态并重定向到登录页
 
 ### 2. 消息系统
-- **公共聊天**: 所有用户可见的群聊消息
-- **私密聊天**: 一对一私聊会话
-- **系统消息**: 用户加入/离开通知
-- **消息过滤**: 只显示相关的私聊消息
+- **实时聊天**: 所有在线用户可见的公共聊天
+- **消息历史**: 保存最近的聊天记录
+- **自动滚动**: 新消息自动滚动到底部
+- **消息限制**: 最多保存100条历史消息，防止内存溢出
 
-### 3. 消息管理
-- **消息持久化**: ServletContext 存储聊天记录
-- **容量限制**: 
-  - 公共消息: 保留最近100条
-  - 私聊消息: 每个会话保留最近50条
-- **未读标记**: 私聊消息未读状态标识
+### 3. 界面特性
+- **响应式布局**: 适配不同屏幕尺寸
+- **简洁设计**: 清晰的消息展示和用户列表
+- **实时更新**: 页面自动刷新显示新消息
+- **时间戳**: 每条消息显示发送时间
 
-### 4. 界面特性
-- **响应式设计**: 适配不同屏幕尺寸
-- **实时刷新**: 定时自动刷新消息
-- **消息分类**: 不同样式区分消息类型
-- **用户交互**: 点击用户头像发起私聊
-
-## 🚀 快速开始
-
-### 环境要求
-- JDK 11+
-- Apache Tomcat 10+
-- Maven 3.6+
-
-### 部署步骤
-
-1. **克隆项目**
-   ```bash
-   git clone <repository-url>
-   ```
-
-2. **构建项目**
-   ```bash
-   mvn clean package
-   ```
-
-3. **部署到Tomcat**
-   - 将生成的 WAR 文件复制到 Tomcat 的 `webapps` 目录
-   - 启动 Tomcat 服务器
-
-4. **访问应用**
-   ```
-   http://localhost:8080/chatroom_improved_version/
-   ```
 
 ## 📁 核心文件说明
 
 ### 配置文件
-- **web.xml**: 应用配置，会话超时设置，欢迎页面
+- **web.xml**: Web应用部署描述符，配置会话超时、欢迎页面等
 
 ### 数据模型
-- **Message.java**: 消息实体，支持公共/私聊/系统三种类型
-- **PrivateMessage.java**: 私聊消息实体，包含已读状态管理
+- **Message.java**: 消息数据模型，包含发送者、内容和时间戳
 
 ### Servlet控制器
-- **LoginServlet.java**: 处理用户登录，检查昵称唯一性
-- **ChatRoomServlet.java**: 主聊天室控制器，处理消息发送
-- **PrivateChatServlet.java**: 私聊控制器，管理私聊会话
-- **LogoutServlet.java**: 处理用户登出，清理在线状态
+- **LoginServlet.java**: 处理用户登录，验证昵称并添加到在线用户列表
+- **ChatRoomServlet.java**: 处理聊天室消息发送和显示，管理消息历史
+- **LogoutServlet.java**: 处理用户退出，清理用户会话和在线状态
 
-### 视图页面
-- **index.jsp**: 登录页面，输入昵称进入聊天室
-- **chat.jsp**: 主聊天室页面，显示公共聊天和在线用户
-- **private-chat.jsp**: 私聊页面，显示一对一聊天会话
+### JSP视图
+- **index.jsp**: 用户登录页面，简洁的表单设计
+- **chat.jsp**: 主聊天室页面，包含消息区域和用户列表
 
 ## 🔧 关键技术实现
 
 ### 并发控制
 ```java
-// 使用 synchronized 保证线程安全
-synchronized (onlineUsers) {
-    onlineUsers.put(trimmed, session.getId());
+// 使用 synchronized 关键字保证线程安全
+synchronized (users) {
+    users.add(trimmed);
 }
 ```
 
-### 消息过滤
+### 数据存储
 ```java
-// 只显示当前用户相关的私聊消息
-if (msg.isPublic() || msg.isSystem() ||
-    (msg.isPrivate() && (msg.getSender().equals(currentUser) ||
-                         msg.getTargetUser().equals(currentUser)))) {
-    filteredMessages.add(msg);
-}
+// 使用 ServletContext 存储应用级数据
+context.setAttribute("onlineUsers", set);
+context.setAttribute("messages", list);
 ```
 
-### 私聊会话管理
+### 消息管理
 ```java
-// 生成唯一的会话键
-private String getConversationKey(String user1, String user2) {
-    if (user1.compareTo(user2) < 0) {
-        return user1 + ":" + user2;
-    } else {
-        return user2 + ":" + user1;
-    }
+// 限制消息历史数量（最多100条）
+if (messageList.size() > 100) {
+    messageList.remove(0);
 }
 ```
 
-## 🎨 界面特色
+### 时间格式化
+```java
+// 使用 DateTimeFormatter 格式化时间显示
+DateTimeFormatter TIME_FORMATTER = 
+    DateTimeFormatter.ofPattern("HH:mm:ss");
+msg.getTime().format(TIME_FORMATTER)
+```
 
-### 消息样式
-- **公共消息**: 白色背景，普通样式
-- **私聊消息**: 蓝色边框，标注"私聊"标识
-- **系统消息**: 灰色背景，居中显示
+## 🎨 界面设计
 
-### 用户界面
-- **在线用户列表**: 实时更新，显示私聊按钮
-- **消息时间戳**: 精确到秒的时间显示
-- **未读消息**: 红色圆点标识未读私聊
+### 布局结构
+- **头部**: 显示欢迎信息和当前用户
+- **聊天区域**: 左侧显示消息历史，右侧显示在线用户列表
+- **输入区域**: 底部消息输入框和发送按钮
+- **操作区域**: 退出聊天室按钮
 
-### 交互体验
-- **自动滚动**: 新消息自动滚动到可视区域
-- **快捷键**: 回车键快速发送消息
-- **实时刷新**: 定时刷新获取新消息
+### 样式特点
+- **配色方案**: 绿色主题，简洁清爽
+- **响应式设计**: 自适应不同屏幕尺寸
+- **用户友好**: 清晰的视觉层次和交互反馈
 
 ## ⚙️ 配置说明
 
@@ -169,12 +134,14 @@ private String getConversationKey(String user1, String user2) {
 </session-config>
 ```
 
-### 消息容量
-- 修改 `ChatRoomServlet.java` 中的 `100` 调整公共消息容量
-- 修改 `PrivateChatServlet.java` 中的 `50` 调整私聊消息容量
+### 欢迎页面
+```xml
+<welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+</welcome-file-list>
+```
 
-### 刷新频率
-- 公共聊天室: 10秒自动刷新
-- 私聊页面: 5秒自动刷新
+### Servlet 注解
+项目使用 `@WebServlet` 注解配置 Servlet 映射，无需在 web.xml 中额外配置。
 
 
